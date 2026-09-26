@@ -1,4 +1,5 @@
 require "test_helper"
+require "minitest/mock"
 
 class PokemonsControllerTest < ActionDispatch::IntegrationTest
   setup do
@@ -17,10 +18,58 @@ class PokemonsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create pokemon" do
     assert_difference("Pokemon.count") do
-      post pokemons_url, params: { pokemon: {} }
+      post pokemons_url, params: { pokemon: { name: "Pikachu", element_type: "electric", generation: "gen1" } }
     end
 
     assert_redirected_to pokemon_url(Pokemon.last)
+  end
+
+  test "should not create pokemon without a name" do
+    assert_no_difference("Pokemon.count") do
+      post pokemons_url, params: { pokemon: { element_type: "electric" } }
+    end
+
+    assert_response :unprocessable_entity
+  end
+
+  test "should get new_with_ai" do
+    get new_with_ai_pokemons_url
+    assert_response :success
+  end
+
+  test "should create pokemon with ai" do
+    generated = Pokemon.new(name: "Pikachu", element_type: "electric", generation: "gen1")
+
+    Pokemon::Generator.stub :call, generated do
+      assert_difference("Pokemon.count") do
+        post create_with_ai_pokemons_url, params: { pokemon_description: "a small electric mouse" }
+      end
+    end
+
+    assert_redirected_to pokemon_url(Pokemon.last)
+    assert_equal "Pikachu was created from your description.", flash[:notice]
+  end
+
+  test "should re-render the form when the description is blank" do
+    assert_no_difference("Pokemon.count") do
+      post create_with_ai_pokemons_url, params: { pokemon_description: "" }
+    end
+
+    assert_response :unprocessable_entity
+    assert_match "Describe the Pokemon first", response.body
+  end
+
+  test "should re-render the form when the provider fails" do
+    failure = ->(*) { raise RubyLLM::Error, "provider is down" }
+
+    Pokemon::Generator.stub :call, failure do
+      assert_no_difference("Pokemon.count") do
+        post create_with_ai_pokemons_url, params: { pokemon_description: "a small electric mouse" }
+      end
+    end
+
+    assert_response :unprocessable_entity
+    assert_match "provider is down", response.body
   end
 
   test "should show pokemon" do

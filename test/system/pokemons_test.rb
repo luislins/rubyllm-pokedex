@@ -12,8 +12,9 @@ class PokemonsTest < ApplicationSystemTestCase
 
   test "should create pokemon" do
     visit pokemons_url
-    click_on "New pokemon"
+    click_on "New pokemon", exact: true
 
+    fill_in "Name", with: "Pikachu"
     click_on "Create Pokemon"
 
     assert_text "Pokemon was successfully created"
