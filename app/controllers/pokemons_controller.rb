@@ -43,7 +43,7 @@ class PokemonsController < ApplicationController
 
     response = chat.with_schema(PokemonSchema).ask(params[:pokemon_description])
 
-    @pokemon = Pokemon.new(response.content)
+    @pokemon = Pokemon.new(response.parsed)
     if @pokemon.save
       redirect_to @pokemon, notice: "AI Pokemon was successfully created from description: #{response.content}"
     else
