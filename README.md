@@ -1,6 +1,6 @@
 # RubyLLM Pokédex
 
-[![CI](https://github.com/luislins/rubyllm-pokemon-testing/actions/workflows/ci.yml/badge.svg)](https://github.com/luislins/rubyllm-pokemon-testing/actions/workflows/ci.yml)
+[![CI](https://github.com/luislins/rubyllm-pokedex/actions/workflows/ci.yml/badge.svg)](https://github.com/luislins/rubyllm-pokedex/actions/workflows/ci.yml)
 
 A small Rails app that turns a free-text description into a Pokémon record
 using structured output from an LLM. Rails 8.1, RubyLLM 2.0, SQLite. A
