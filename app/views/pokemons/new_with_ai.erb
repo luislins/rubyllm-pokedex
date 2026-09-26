@@ -2,8 +2,24 @@
 
 <h1>New pokemon with AI</h1>
 
+<% if alert %>
+  <p style="color: red"><%= alert %></p>
+<% end %>
+
+<% if @pokemon.errors.any? %>
+  <div style="color: red">
+    <h2><%= pluralize(@pokemon.errors.count, "error") %> prohibited this pokemon from being saved:</h2>
+
+    <ul>
+      <% @pokemon.errors.each do |error| %>
+        <li><%= error.full_message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
 <%= form_with url: create_with_ai_pokemons_path, method: :post do |form| %>
-  <%= form.text_area :pokemon_description, placeholder: "Enter a description of the pokemon you want to create" %>
+  <%= form.text_area :pokemon_description, value: params[:pokemon_description], placeholder: "Enter a description of the pokemon you want to create" %>
   <%= form.submit "Create", class: "button" %>
 <% end %>
 

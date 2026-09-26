@@ -38,17 +38,19 @@ class PokemonsController < ApplicationController
     end
   end
 
+  # POST /pokemons/create_with_ai
   def create_with_ai
-    chat = RubyLLM.chat
+    @pokemon = Pokemon::Generator.call(params[:pokemon_description])
 
-    response = chat.with_schema(PokemonSchema).ask(params[:pokemon_description])
-
-    @pokemon = Pokemon.new(response.parsed)
     if @pokemon.save
-      redirect_to @pokemon, notice: "AI Pokemon was successfully created from description: #{response.content}"
+      redirect_to @pokemon, notice: "#{@pokemon.name} was created from your description."
     else
       render :new_with_ai, status: :unprocessable_entity
     end
+  rescue Pokemon::Generator::BlankDescription, RubyLLM::Error => error
+    @pokemon = Pokemon.new
+    flash.now[:alert] = "Could not create a Pokemon: #{error.message}"
+    render :new_with_ai, status: :unprocessable_entity
   end
 
   # PATCH/PUT /pokemons/1 or /pokemons/1.json

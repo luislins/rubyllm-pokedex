@@ -61,6 +61,9 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+
+  # Minitest 6 ships stub/mock as a separate gem
+  gem "minitest-mock"
 end
 
 # Unified API for LLM providers, with structured output via Schematist [https://rubyllm.com]
