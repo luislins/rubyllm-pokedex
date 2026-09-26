@@ -1,4 +1,4 @@
-require 'ruby_llm/schema'
+require "ruby_llm/schema"
 
 class PokemonSchema < RubyLLM::Schema
   description "This schema is used to create Pokemon. A Pokemon is a creature with a name, generation, and element type."
