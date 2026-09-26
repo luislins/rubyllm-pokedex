@@ -1,4 +1,6 @@
 class Pokemon < ApplicationRecord
+  validates :name, presence: true
+
   enum :element_type, {
     normal: 0,
     fire: 1,
