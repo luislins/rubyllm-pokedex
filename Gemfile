@@ -67,4 +67,4 @@ group :test do
 end
 
 # Unified API for LLM providers, with structured output via Schematist [https://rubyllm.com]
-gem "ruby_llm", "~> 2.0"
+gem "ruby_llm", "~> 2.2"
